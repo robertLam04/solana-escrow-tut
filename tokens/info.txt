@@ -1,0 +1,8 @@
+spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb --enable-metadata mnt5aCXyjSxeF4HrzNnsWyhWKWQ5iYhnwVX1w45BB7q.json
+Creating token mnt5aCXyjSxeF4HrzNnsWyhWKWQ5iYhnwVX1w45BB7q under program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
+To initialize metadata inside the mint, please run `spl-token initialize-metadata mnt5aCXyjSxeF4HrzNnsWyhWKWQ5iYhnwVX1w45BB7q <YOUR_TOKEN_NAME> <YOUR_TOKEN_SYMBOL> <YOUR_TOKEN_URI>`, and sign with the mint authority.
+
+Address:  mnt5aCXyjSxeF4HrzNnsWyhWKWQ5iYhnwVX1w45BB7q
+Decimals:  9
+
+Signature: 4FuEkKamRwDc2wyPZE9ZVEqVPqUYDEGUkQbToKLYqcrspA1Q5aoA5q8jKrA4C4BvpdxqwgGBj8qd4jsiRJo8sxqo
