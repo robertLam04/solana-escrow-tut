@@ -9,6 +9,10 @@ pub enum EscrowError {
     InvalidInstruction,
     #[error("Not Rent Exempt")]
     NotRentExempt,
+    #[error("Expected Amount Mismatch")]
+    ExpectedAmountMismatch,
+    #[error("Overflow")]
+    AmountOverflow
 }
 
 // Implement the generic From trait which the ? operator wants to use
