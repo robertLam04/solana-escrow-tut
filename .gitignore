@@ -2,3 +2,6 @@
 /*.so
 /target/
 test-ledger
+usage/node_modules
+usage/package.json
+usage/package-lock.json

@@ -15,5 +15,6 @@ fn process_instruction(
     // Any data passed to the program by caller
     instruction_data: &[u8],
 ) -> ProgramResult {
+    msg!("Processing instruction");
     Processor::process(program_id, accounts, instruction_data)
 }

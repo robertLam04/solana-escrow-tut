@@ -1,5 +1,8 @@
 use std::convert::TryInto;
-use solana_program::program_error::ProgramError;
+use solana_program::{
+    msg,
+    program_error::ProgramError
+};
 
 use crate::error::EscrowError::InvalidInstruction;
 
@@ -48,6 +51,7 @@ impl EscrowInstruction {
     // Takes a byte slice as input &[u8] and tries to decode it into a valid EscrowInstruction enum
     pub fn unpack(input: &[u8]) -> Result<Self, ProgramError> {
         let (tag, rest) = input.split_first().ok_or(InvalidInstruction)?;
+        msg!("Instruction tag: {}", tag);
 
         // Match the tag block to determine which EscrowInstruction
         Ok(match tag {
@@ -62,6 +66,7 @@ impl EscrowInstruction {
     }
 
     fn unpack_amount(input: &[u8]) -> Result<u64, ProgramError> {
+        msg!("Attempting to unpack amount data");
         let amount = input
             .get(..8)
             .and_then(|slice| slice.try_into().ok())

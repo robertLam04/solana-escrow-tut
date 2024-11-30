@@ -1,0 +1,2 @@
+program id: BfPLGymiirJKfRYKy4merKahBvuAUrVcWdBRy3uvneE4
+Deployment signer: hik9k5fyNSz3pYZwEw9AKnfiB5tHoo3ZHqLKKfBBxkz

@@ -6,13 +6,13 @@ use solana_program::program_error::ProgramError;
 pub enum EscrowError {
     // Invalid instruction
     #[error("Invalid Instruction")]
-    InvalidInstruction,
+    InvalidInstruction = 0x01,
     #[error("Not Rent Exempt")]
-    NotRentExempt,
+    NotRentExempt = 0x02,
     #[error("Expected Amount Mismatch")]
-    ExpectedAmountMismatch,
+    ExpectedAmountMismatch = 0x03,
     #[error("Overflow")]
-    AmountOverflow
+    AmountOverflow = 0x04
 }
 
 // Implement the generic From trait which the ? operator wants to use

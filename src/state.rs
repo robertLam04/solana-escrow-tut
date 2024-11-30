@@ -1,17 +1,18 @@
 // Define state objects used by the processor here and serialize/deserialize objects into arrays of u8
 
 use solana_program::{
-    program_pack::{IsInitialized, Pack, Sealed},
-    program_error::ProgramError,
     pubkey::Pubkey,
+    program_error::ProgramError,
+    msg
 };
-use arrayref::{array_mut_ref, array_ref, array_refs, mut_array_refs};
+use borsh::{BorshDeserialize, BorshSerialize};
 
 // Save pub keys here so that a user knows what accounts to pass into the entrypoint
 // Save initializer_token_to_receive_account pubkey so the escrow know where to send acceptors tokens
 // Also to ensure that the acceptor passes the same temp account that was initialized
 // It's the programs responsibility to chck that recieved accounts == expected accounts
 // Save expected amount to ensure acceptor sends enough tokens
+#[derive(BorshDeserialize, BorshSerialize, Debug, PartialEq)]
 pub struct Escrow {
     pub is_initialized: bool,
     pub initializer_pubkey: Pubkey,
@@ -20,65 +21,21 @@ pub struct Escrow {
     pub expected_amount: u64,
 }
 
-impl Sealed for Escrow {}
+impl Escrow {
 
-impl IsInitialized for Escrow {
-    fn is_initialized(&self) -> bool {
-        self.is_initialized
-    }
-}
+    pub const LEN: usize = 1 + 32 + 32 + 32 + 8;
 
-impl Pack for Escrow {
-    // Define the size of our type: 1 (bool) + 3 * 32 (pubkey) + 1 * 8 (u64) = 105
-    const LEN: usize = 105;
-
-    // Converts an array of u8 into an instance of Escrow struct defined above
-    fn unpack_from_slice(src: &[u8]) -> Result<Self, ProgramError> {
-        let src = array_ref![src, 0, Escrow::LEN];
-        let (
-            is_initialized,
-            initializer_pubkey,
-            temp_token_account_pubkey,
-            initializer_token_to_receive_account_pubkey,
-            expected_amount,
-        ) = array_refs![src, 1, 32, 32, 32, 8];
-        let is_initialized = match is_initialized {
-            [0] => false,
-            [1] => true,
-            _ => return Err(ProgramError::InvalidAccountData),
-        };
-
-        Ok(Escrow {
-            is_initialized,
-            initializer_pubkey: Pubkey::new_from_array(*initializer_pubkey),
-            temp_token_account_pubkey: Pubkey::new_from_array(*temp_token_account_pubkey),
-            initializer_token_to_receive_account_pubkey: Pubkey::new_from_array(*initializer_token_to_receive_account_pubkey),
-            expected_amount: u64::from_le_bytes(*expected_amount),
-        })
+    pub fn from_account_info(account_info: &solana_program::account_info::AccountInfo) -> Result<Self, ProgramError> {
+        let data = &account_info.data.borrow();
+        Escrow::try_from_slice(data).map_err(|_| ProgramError::InvalidAccountData)
     }
 
-    fn pack_into_slice(&self, dst: &mut [u8]) {
-        let dst = array_mut_ref![dst, 0, Escrow::LEN];
-        let (
-            is_initialized_dst,
-            initializer_pubkey_dst,
-            temp_token_account_pubkey_dst,
-            initializer_token_to_receive_account_pubkey_dst,
-            expected_amount_dst,
-        ) = mut_array_refs![dst, 1, 32, 32, 32, 8];
-
-        let Escrow {
-            is_initialized,
-            initializer_pubkey,
-            temp_token_account_pubkey,
-            initializer_token_to_receive_account_pubkey,
-            expected_amount,
-        } = self;
-
-        is_initialized_dst[0] = *is_initialized as u8;
-        initializer_pubkey_dst.copy_from_slice(initializer_pubkey.as_ref());
-        temp_token_account_pubkey_dst.copy_from_slice(temp_token_account_pubkey.as_ref());
-        initializer_token_to_receive_account_pubkey_dst.copy_from_slice(initializer_token_to_receive_account_pubkey.as_ref());
-        *expected_amount_dst = expected_amount.to_le_bytes();
+    /// Serialize the Escrow struct into the account data
+    pub fn to_account_info(&self, account_info: &solana_program::account_info::AccountInfo) -> Result<(), ProgramError> {
+        let mut data = account_info.data.borrow_mut();
+        msg!("Account data buffer size: {}", data.len());
+        msg!("Expected data size: {}", Escrow::LEN);
+        self.serialize(&mut *data).map_err(|_| ProgramError::AccountDataTooSmall)
     }
+
 }

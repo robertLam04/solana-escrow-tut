@@ -355,6 +355,7 @@ name = "bpf-program-template"
 version = "0.1.0"
 dependencies = [
  "arrayref",
+ "borsh 0.10.4",
  "solana-program",
  "spl-token",
  "thiserror",
