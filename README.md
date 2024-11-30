@@ -13,3 +13,28 @@ $ cargo test
 $ cargo build-bpf
 $ cargo test-bpf
 ```
+
+### Setup local net (in a new terminal)
+```
+$ solana-test-validator
+```
+
+### Deploy program
+#### Ensure config is set to local host:
+```
+$ solana config get
+$ solana config set --url https://127.0.0.1:8899
+```
+#### If you don't already have a keypair, make one:
+```
+$ solana-keygen new
+```
+#### Build and test the program compiled for BPF:
+```
+$ cargo build-bpf
+$ cargo test-bpf
+```
+#### Deploy
+```
+$ solana program deploy <PATH_TO_.SO_FILE>
+```
